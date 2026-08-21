@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<title>Wafacash — Émission Cash Express</title>
+<meta name="theme-color" content="#00A651"/>
+<link rel="icon" href="favicon.ico"/>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f4f6f8;color:#123B28}
+  header{background:linear-gradient(135deg,#00A651,#00753A);color:#fff;padding:18px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+  header img{height:34px;background:#fff;border-radius:6px;padding:4px}
+  header h1{margin:0;font-size:17px;font-weight:700}
+  header small{display:block;opacity:.9;font-size:12px}
+  .back{margin-left:auto;color:#fff;text-decoration:none;font-size:22px;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,.15)}
+  main{max-width:720px;margin:0 auto;padding:14px}
+  .card{background:#fff;border-radius:14px;padding:14px 14px 4px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  .card h2{margin:0 0 10px;font-size:14px;color:#00753A;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #E7F7EE;padding-bottom:6px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row.one{grid-template-columns:1fr}
+  .field{margin-bottom:10px}
+  label{display:block;font-size:12px;color:#4a5b52;margin-bottom:4px;font-weight:600}
+  input,select,textarea{width:100%;border:1px solid #d5dbd7;border-radius:10px;padding:10px 12px;font-size:15px;background:#fff;color:#123B28;font-family:inherit}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#00A651;box-shadow:0 0 0 3px #E7F7EE}
+  textarea{min-height:80px;resize:vertical}
+  textarea[dir=rtl]{text-align:right;font-family:'AmiriPDF',serif;font-size:16px;line-height:1.9}
+  .hint{font-size:11px;color:#6b7c73;margin-top:4px}
+  .check{display:flex;align-items:center;gap:8px;font-size:14px;margin:6px 0}
+  .check input{width:auto}
+  .amounts{background:#F7FBF8;border:1px dashed #b7d7c4;border-radius:10px;padding:10px;margin-top:6px}
+  .amounts .line{display:flex;justify-content:space-between;padding:4px 0;font-size:14px}
+  .amounts .total{border-top:1px solid #b7d7c4;margin-top:6px;padding-top:8px;font-weight:800;font-size:16px;color:#00753A}
+  .actions{display:flex;gap:10px;padding:6px 0 20px}
+  button{flex:1;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,#00A651,#00753A);color:#fff}
+  .btn-ghost{background:#fff;color:#00753A;border:1px solid #00A651}
+  .err{color:#b00020;font-size:12px;margin-top:4px;display:none}
+  .err.on{display:block}
+
+  /* ---- Aperçu PDF ---- */
+  #pv{position:fixed;inset:0;background:rgba(8,20,14,.72);display:none;z-index:50;padding:10px}
+  #pv.on{display:flex;flex-direction:column}
+  #pv .pv-bar{color:#fff;padding:4px 4px 8px}
+  #pv .pv-bar span{display:block;margin-top:2px}
+  #pv .pv-bar b{font-size:15px}
+  #pv .pv-bar span{font-size:12px;opacity:.85}
+  #pv .pv-box{flex:1;background:#e9edeb;border-radius:12px;overflow:auto;min-height:0;display:flex;align-items:flex-start;justify-content:center;padding:6px;-webkit-overflow-scrolling:touch}
+  #pv img{width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.25);background:#fff}
+  #pv iframe{width:100%;height:100%;border:0;display:block;background:#e9edeb}
+  #pv .pv-actions{display:flex;gap:10px;padding:10px 0 4px}
+  #pv .pv-actions button{padding:13px}
+  .loading{position:fixed;inset:0;background:rgba(255,255,255,.75);display:none;align-items:center;justify-content:center;z-index:60;font-weight:700;color:#00753A}
+  .loading.on{display:flex}
+</style>
+</head>
+<body>
+<header>
+  <img src="wafacash.png" alt="Wafacash"/>
+  <div>
+    <h1>Cash Express</h1>
+    <small>Émission — Reçu Client</small>
+  </div>
+  <a class="back" href="/wafacash" aria-label="Retour">×</a>
+</header>
+
+<main>
+  <form id="f" novalidate>
+    <section class="card">
+      <h2>En-tête</h2>
+      <div class="row">
+        <div class="field"><label>Agence</label><input name="agence" value="CASA MAZOLA (AFN)(2811) - AFN0120"/></div>
+        <div class="field"><label>N° de transfert</label><input name="ntransfert" value="240 367 734 240"/></div>
+        <div class="field"><label>Réf. entreprise</label><input name="ref" value=""/></div>
+        <div class="field"><label>Date</label><input name="date" type="date" value="2019-07-17"/></div>
+        <div class="field"><label>Heure</label><input name="heure" type="time" value="12:08"/></div>
+
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Expéditeur</h2>
+      <div class="row">
+        <div class="field"><label>Nom / Prénom *</label><input name="exp_nom" value="HERRATI MEHDI" required/><div class="err">Requis</div></div>
+        <div class="field"><label>Ville</label><input name="exp_ville" value="CASA SUD"/></div>
+        <div class="field"><label>Téléphone</label><input name="exp_tel" value="" inputmode="tel"/></div>
+        <div class="field"><label>Type de pièce</label>
+          <select name="exp_type"><option>CIN</option><option>Passeport</option><option>Permis</option><option>Carte séjour</option></select>
+        </div>
+        <div class="field"><label>N° pièce (PID N°)</label><input name="exp_pid" value="BK214186"/></div>
+        <div class="field"><label>Date d'expiration (PID Exp.)</label><input name="exp_pidexp" type="date" value="2021-11-10"/></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Bénéficiaire</h2>
+      <div class="row">
+        <div class="field"><label>Nom / Prénom *</label><input name="ben_nom" value="LACHGAR REDOUANE" required/><div class="err">Requis</div></div>
+        <div class="field"><label>Ville</label><input name="ben_ville" value="CASA NORD"/></div>
+        <div class="field"><label>Téléphone</label><input name="ben_tel" value="" inputmode="tel"/></div>
+        <div class="field"><label>Type de pièce</label>
+          <select name="ben_type"><option value="" selected></option><option>CIN</option><option>Passeport</option><option>Permis</option><option>Carte séjour</option></select>
+        </div>
+        <div class="field"><label>N° pièce (PID N°)</label><input name="ben_pid" value=""/></div>
+        <div class="field"><label>Date d'expiration (PID Exp.)</label><input name="ben_pidexp" type="date" value=""/></div>
+
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Notifications (optionnel)</h2>
+      <label class="check"><input type="checkbox" name="sms_ben"/> SMS Bénéficiaire</label>
+      <label class="check"><input type="checkbox" name="sms_exp"/> SMS Expéditeur</label>
+    </section>
+
+    <section class="card">
+      <h2>Raison</h2>
+      <div class="field row one"><label>Texte du cadre « Raison » (arabe ou français)</label>
+        <textarea name="raison" dir="rtl"></textarea>
+        <div class="hint">Le texte arabe est composé en RTL avec la police Amiri intégrée : rendu identique sur tous les navigateurs.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Montant</h2>
+      <div class="row">
+        <div class="field"><label>Montant envoyé (MAD) *</label>
+          <input name="montant" type="number" step="0.01" min="0" value="12270" required oninput="calc()"/>
+
+          <div class="err">Requis</div>
+        </div>
+        <div class="field"><label>Total frais HT (MAD)</label>
+          <input name="frais" type="number" step="0.01" min="0" value="74.74" oninput="calc()"/>
+        </div>
+      </div>
+      <div class="amounts">
+        <div class="line"><span>Montant envoyé</span><b id="a-envoye">0,00 MAD</b></div>
+        <div class="line"><span>Total frais HT (*)</span><b id="a-frais">0,00 MAD</b></div>
+        <div class="line"><span>TVA (10%) (**)</span><b id="a-tva">0,00 MAD</b></div>
+        <div class="line total"><span>Total à payer</span><b id="a-total">0,00 MAD</b></div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="btn-ghost" onclick="history.back()">Annuler</button>
+      <button type="submit" class="btn-primary">Aperçu du reçu</button>
+    </div>
+  </form>
+</main>
+
+<!-- Aperçu avant téléchargement -->
+<div id="pv" role="dialog" aria-modal="true" aria-label="Aperçu du reçu">
+  <div class="pv-bar">
+    <div>
+      <b>Aperçu du reçu</b>
+      <span>Vérifiez les cadres et les champs avant de télécharger.</span>
+    </div>
+  </div>
+  <div class="pv-box" id="pv-box"></div>
+  <div class="pv-actions">
+    <button type="button" class="btn-ghost" id="pv-close">Modifier</button>
+    <button type="button" class="btn-primary" id="pv-dl">Télécharger le PDF</button>
+  </div>
+</div>
+<div class="loading" id="load">Génération du reçu…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}</script>
+<script>
+const $ = s => document.querySelector(s);
+const f = document.getElementById('f');
+
+/* Texte arabe du cadre « Raison » tel que sur le reçu d'origine */
+const RAISON_AR = 'يمكنكم اداء كل ضرائبكم نقدا (الضريبة على الدخل، الضريبة على الشركات، الضريبة على القيمة المضافة) لدى جميع وكالات وفاكاش في جميع أنحاء المغرب';
+/* Mention légale arabe du pied de page (à droite) */
+const FOOTER_AR = 'الشروط العامة المتعلقة بخدمات كاش إكسبريس متوفرة لدى وكالتكم، وبتوقيعكم على هذا الوصل فإنكم توافقون على هذه الشروط';
+
+f.raison.value = RAISON_AR;
+
+function fmt(n){
+  n = Number(n)||0;
+  const [i,d]=n.toFixed(2).split('.');
+  const withSep=i.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  return withSep+','+d+' MAD';
+}
+function calc(){
+  const m = Number(f.montant.value)||0;
+  const fr = Number(f.frais.value)||0;
+  const tva = +(fr*0.10).toFixed(2);
+  const total = +(m + fr + tva).toFixed(2);
+  $('#a-envoye').textContent = fmt(m);
+  $('#a-frais').textContent = fmt(fr);
+  $('#a-tva').textContent = fmt(tva);
+  $('#a-total').textContent = fmt(total);
+  return {m, fr, tva, total};
+}
+/* date et heure telles que sur le reçu d'origine (préremplies dans le formulaire) */
+
+calc();
+
+function frDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return d+'/'+m+'/'+y;
+}
+const hasArabic = s => /[\u0600-\u06FF]/.test(s||'');
+
+/* ============================================================
+   POLICE ARABE INTÉGRÉE (Amiri) — rendu identique partout
+   Les fichiers .woff2 sont servis par le site, encodés en base64
+   puis injectés à la fois dans le document et dans le SVG utilisé
+   pour composer l'arabe. Aucune dépendance aux polices système.
+   ============================================================ */
+let AR_CSS = '';
+const arFontReady = (async () => {
+  const b64 = async url => {
+    const buf = await (await fetch(url)).arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let bin = '';
+    for(let i=0;i<bytes.length;i+=0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i+0x8000));
+    return btoa(bin);
+  };
+  try{
+    const [reg, bold] = await Promise.all([b64('amiri-arabic.woff2'), b64('amiri-arabic-bold.woff2')]);
+    AR_CSS =
+      "@font-face{font-family:'AmiriPDF';font-style:normal;font-weight:400;src:url(data:font/woff2;base64,"+reg+") format('woff2');}"+
+      "@font-face{font-family:'AmiriPDF';font-style:normal;font-weight:700;src:url(data:font/woff2;base64,"+bold+") format('woff2');}";
+    const st = document.createElement('style');
+    st.textContent = AR_CSS;
+    document.head.appendChild(st);
+    await document.fonts.load("400 20px 'AmiriPDF'", 'ا');
+    await document.fonts.load("700 20px 'AmiriPDF'", 'ا');
+    await document.fonts.ready;
+  }catch(e){ AR_CSS = ''; }
+})();
+
+const AR_FAMILY = "'AmiriPDF','Noto Naskh Arabic','Amiri','Traditional Arabic','Geeza Pro',serif";
+const AR_CACHE = new Map();
+const escXml = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+/* Compose du texte arabe (liaisons + sens RTL assurés par le navigateur)
+   dans un SVG, puis le rasterise en PNG haute densité pour jsPDF. */
+async function arRender(text, {px = 40, bold = false, wrapPx = 0} = {}){
+  await arFontReady;
+  const key = px+'|'+(bold?1:0)+'|'+wrapPx+'|'+text;
+  if(AR_CACHE.has(key)) return AR_CACHE.get(key);
+
+  const base = 'direction:rtl;unicode-bidi:isolate;text-align:right;margin:0;padding:0;'+
+    'font-family:'+AR_FAMILY+";font-size:"+px+'px;font-weight:'+(bold?700:400)+';color:#000;'+
+    'line-height:'+(bold?1.45:1.5)+';'+(wrapPx?('width:'+wrapPx+'px;white-space:normal;word-wrap:break-word;'):'white-space:nowrap;');
+
+  // mesure réelle dans le document (même police, mêmes styles)
+  const probe = document.createElement('div');
+  probe.setAttribute('dir','rtl');
+  probe.setAttribute('lang','ar');
+  probe.style.cssText = base + 'position:absolute;left:-99999px;top:0;visibility:hidden;';
+  probe.textContent = text;
+  document.body.appendChild(probe);
+  const w = Math.ceil(probe.getBoundingClientRect().width) + 6;
+  const h = Math.ceil(probe.getBoundingClientRect().height) + 6;
+  probe.remove();
+
+  const p = new Promise(res=>{
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'+
+        '<defs><style type="text/css">'+AR_CSS+'</style></defs>'+
+        '<foreignObject x="0" y="0" width="'+w+'" height="'+h+'">'+
+          '<div xmlns="http://www.w3.org/1999/xhtml" dir="rtl" lang="ar" style="'+base+'">'+escXml(text)+'</div>'+
+        '</foreignObject>'+
+      '</svg>';
+    const img = new Image();
+    img.onload = () => {
+      const S = 3;
+      const c = document.createElement('canvas');
+      c.width = w*S; c.height = h*S;
+      const cx = c.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0,0,c.width,c.height);
+      cx.scale(S,S); cx.drawImage(img,0,0);
+      res({url:c.toDataURL('image/png'), ratio:w/h});
+    };
+    img.onerror = () => res(null);
+    img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+  AR_CACHE.set(key,p);
+  return p;
+}
+
+/* place une ligne arabe : hmm = hauteur en mm ; align 'right' | 'left' */
+async function arLine(doc, text, x, y, hmm, align, bold){
+  const im = await arRender(text, {px:44, bold});
+  if(!im) return 0;
+  const wmm = hmm * im.ratio;
+  doc.addImage(im.url, 'PNG', align === 'right' ? x - wmm : x, y, wmm, hmm);
+  return wmm;
+}
+/* place un paragraphe arabe justifié à droite dans une largeur donnée */
+async function arBlock(doc, text, xRight, yTop, wmm, px, wrapPx, bold){
+  const im = await arRender(text, {px, bold, wrapPx});
+  if(!im) return 0;
+  const hmm = wmm / im.ratio;
+  doc.addImage(im.url, 'PNG', xRight - wmm, yTop, wmm, hmm);
+  return hmm;
+}
+
+/* logo Wafacash */
+let LOGO = null;
+async function logo(){
+  if(LOGO !== null) return LOGO;
+  try{
+    const blob = await (await fetch('wafacash.png')).blob();
+    LOGO = await new Promise(r=>{ const fr = new FileReader(); fr.onload=()=>r(fr.result); fr.onerror=()=>r(''); fr.readAsDataURL(blob); });
+  }catch(e){ LOGO = ''; }
+  return LOGO;
+}
+
+/* signatures manuscrites bleues (extraites du reçu d'origine) */
+const IMG_CACHE = {};
+async function png(url){
+  if(url in IMG_CACHE) return IMG_CACHE[url];
+  try{
+    const blob = await (await fetch(url)).blob();
+    IMG_CACHE[url] = await new Promise(r=>{ const fr = new FileReader(); fr.onload=()=>r(fr.result); fr.onerror=()=>r(''); fr.readAsDataURL(blob); });
+  }catch(e){ IMG_CACHE[url] = ''; }
+  return IMG_CACHE[url];
+}
+
+
+
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  let ok = true;
+  ['exp_nom','ben_nom','montant'].forEach(k=>{
+    const el = f[k]; const err = el.parentElement.querySelector('.err');
+    if(!el.value.trim()){ err.classList.add('on'); ok=false; } else err.classList.remove('on');
+  });
+  if(!ok){ window.scrollTo({top:0,behavior:'smooth'}); return; }
+  const load = document.getElementById('load');
+  load.classList.add('on');
+  try{
+    const doc = await buildPDF(calc());
+    await openPreview(doc);
+  } finally {
+    load.classList.remove('on');
+  }
+});
+
+/* ---------------- Aperçu (rendu image via pdf.js : fiable sur mobile) ---------------- */
+let PDF_DOC = null, PDF_URL = null;
+async function openPreview(doc){
+  PDF_DOC = doc;
+  const box = document.getElementById('pv-box');
+  box.innerHTML = '';
+  if(PDF_URL){ URL.revokeObjectURL(PDF_URL); PDF_URL = null; }
+  PDF_URL = URL.createObjectURL(doc.output('blob'));
+  let rendered = false;
+  try{
+    const pdfjs = window.pdfjsLib;
+    if(pdfjs){
+      const data = doc.output('arraybuffer');
+      const pdf = await pdfjs.getDocument({data}).promise;
+      const page = await pdf.getPage(1);
+      const base = page.getViewport({scale:1});
+      const scale = Math.min(2400 / base.width, 3);
+      const vp = page.getViewport({scale});
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+      const img = document.createElement('img');
+      img.alt = 'Aperçu du reçu Cash Express';
+      img.src = canvas.toDataURL('image/png');
+      box.appendChild(img);
+      rendered = true;
+    }
+  }catch(e){ rendered = false; }
+  if(!rendered){
+    const frame = document.createElement('iframe');
+    frame.src = PDF_URL + '#toolbar=0&view=FitH';
+    box.appendChild(frame);
+  }
+  document.getElementById('pv').classList.add('on');
+}
+
+document.getElementById('pv-close').addEventListener('click', ()=>{
+  document.getElementById('pv').classList.remove('on');
+});
+document.getElementById('pv-dl').addEventListener('click', ()=>{
+  if(!PDF_DOC) return;
+  const name = 'cash-express-' + (f.ntransfert.value||'recu').replace(/\s+/g,'') + '.pdf';
+  PDF_DOC.save(name);
+});
+
+/* ---------------- Construction du PDF ---------------- */
+async function buildPDF(t){
+  const { jsPDF } = window.jspdf;
+  /* demi-format : page A5 paysage (210 x 148,5 mm) avec des écritures un peu plus grandes */
+  const S = 210/297;            // échelle géométrique (demi format)
+  const FS = S * 1.18;          // échelle typographique (texte agrandi)
+  const _doc = new jsPDF({unit:'mm', format:[210, 148.5], orientation:'landscape'});
+  const doc = {
+    _raw:_doc,
+    setFont:(...a)=>_doc.setFont(...a),
+    setTextColor:(...a)=>_doc.setTextColor(...a),
+    setDrawColor:(...a)=>_doc.setDrawColor(...a),
+    setFillColor:(...a)=>_doc.setFillColor(...a),
+    setFontSize:(v)=>_doc.setFontSize(v*FS),
+    setLineWidth:(v)=>_doc.setLineWidth(v*S),
+    text:(txt,x,y,o)=>_doc.text(txt, x*S, y*S, o),
+    rect:(x,y,w,h,st)=>_doc.rect(x*S, y*S, w*S, h*S, st),
+    line:(x1,y1,x2,y2)=>_doc.line(x1*S, y1*S, x2*S, y2*S),
+    triangle:(x1,y1,x2,y2,x3,y3,st)=>_doc.triangle(x1*S,y1*S,x2*S,y2*S,x3*S,y3*S,st),
+    addImage:(d,fm,x,y,w,h)=>_doc.addImage(d, fm, x*S, y*S, w*S, h*S),
+    getTextWidth:(txt)=>_doc.getTextWidth(txt)/S,
+    splitTextToSize:(txt,w)=>_doc.splitTextToSize(txt, w*S),
+    output:(...a)=>_doc.output(...a),
+    save:(...a)=>_doc.save(...a),
+  };
+  const W = 297, H = 180;
+  const g = f;
+  const M = 10;
+  const colW = 133;
+  const xL = M, xR = W - M - colW;              // 10 / 154
+  doc.setTextColor(0,0,0); doc.setDrawColor(0,0,0);
+
+
+  /* ---------- EN-TÊTE ---------- */
+  const lg = await logo();
+  if(lg){
+    try{ doc.addImage(lg, 'PNG', xL, 7.5, 24, 7.5); }catch(e){}
+  }
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('Wafacash', xL+26, 17);
+  await arLine(doc, 'وفاكاش', xL+26, 7, 5.4, 'left', true);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(17);
+  doc.text('Cash', W-M-30, 16, {align:'right'});
+  doc.setFillColor(0,0,0);
+  doc.triangle(W-M-28.5, 12.2, W-M-28.5, 16.6, W-M-24.5, 14.4, 'F');
+  doc.text('xpress', W-M, 16, {align:'right'});
+  doc.setLineWidth(0.5);
+  doc.line(W-M-30, 17.6, W-M, 17.6);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('EMISSION CASH EXPRESS', xL, 25.5);
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  doc.text('Agence', xL+2, 33);
+  doc.text(':', xL+22, 33);
+  doc.text(g.agence.value||'', xL+25, 33);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
+  doc.text('Reçu Client', 125, 38);
+
+  // bloc droit
+  const xLab = 158, xVal = 205;
+  const xColon = xVal - 5;                        // colonne unique des deux-points
+  // N°TRANSFERT
+  doc.setFont('helvetica','bold'); doc.setFontSize(11.5);
+  doc.text('N°TRANSFERT', xColon-1.5, 25.5, {align:'right'});
+  doc.text(':', xColon, 25.5);
+  doc.setFont('helvetica','normal');
+  doc.text(g.ntransfert.value||'', xVal, 25.5);
+  // REF.ENTREPRISE
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  doc.text('REF.ENTREPRISE', xColon-1.5, 32.5, {align:'right'});
+  doc.text(':', xColon, 32.5);
+  doc.text(g.ref.value||'', xVal, 32.5);
+  // DATE
+  doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
+  doc.text('DATE', xColon-1.5, 39.5, {align:'right'});
+  doc.text(':', xColon, 39.5);
+  doc.setFont('helvetica','normal');
+  doc.text(frDate(g.date.value) + (g.heure.value? '  ' + g.heure.value + ':00' : ''), xVal, 39.5);
+
+  /* ---------- EXPEDITEUR / BENEFICIAIRE ---------- */
+  const boxY = 54, rowH = 8.6, boxH = rowH*4;
+  function party(x, title, d){
+    doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
+    doc.text(title, x+2, boxY-2.5);
+    const tw = doc.getTextWidth(title);
+    doc.setLineWidth(0.5); doc.line(x+2, boxY-1.4, x+2+tw, boxY-1.4);
+
+    doc.setLineWidth(0.3);
+    doc.rect(x, boxY, colW, boxH);
+    const xs = x + colW*0.58;
+
+    doc.setFontSize(9);
+    // colonnes fixes : libellé | deux-points alignés | valeur
+    const cMain = x + 28, vMain = x + 31;          // colonne principale
+    const cSub  = xs + 16, vSub = xs + 19;         // colonne Tél / PID Exp
+    const row = (txt, cx, vx, r, value) => {
+      const yy = boxY + r*rowH + 5.6;
+      doc.setFont('helvetica','bold');
+      doc.text(txt, (cx===cMain ? x+2 : xs+2), yy);
+      doc.text(':', cx, yy);
+      doc.setFont('helvetica','normal');
+      doc.text(value||'', vx, yy);
+    };
+    row('Nom / Prénom', cMain, vMain, 0, d.nom);
+    row('Ville',          cMain, vMain, 1, d.ville);
+    row('Tél',            cSub,  vSub,  1, d.tel);
+    row('Type pièce',     cMain, vMain, 2, d.type);
+    row('PID N°',         cMain, vMain, 3, d.pid);
+    row('PID Exp',        cSub,  vSub,  3, frDate(d.pidexp));
+  }
+  party(xL, 'EXPEDITEUR', {nom:g.exp_nom.value, ville:g.exp_ville.value, tel:g.exp_tel.value,
+    type:g.exp_type.value, pid:g.exp_pid.value, pidexp:g.exp_pidexp.value});
+  party(xR, 'BENEFICIAIRE', {nom:g.ben_nom.value, ville:g.ben_ville.value, tel:g.ben_tel.value,
+    type:g.ben_type.value, pid:g.ben_pid.value, pidexp:g.ben_pidexp.value});
+
+  /* ---------- NOTIFICATIONS (gauche) / MONTANTS (droite) ---------- */
+  const y2 = boxY + boxH + 8;                    // ~96
+  doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+  doc.text('Notifications', xL+2, y2);
+  doc.setLineWidth(0.4);
+  doc.line(xL+2, y2+1, xL+2+doc.getTextWidth('Notifications'), y2+1);
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  const cbox = (x,y,on)=>{ doc.setLineWidth(0.3); doc.rect(x,y,3.4,3.4);
+    if(on){ doc.setLineWidth(0.6); doc.line(x+.6,y+1.7,x+1.5,y+2.9); doc.line(x+1.5,y+2.9,x+3,y+.6); } };
+  cbox(xL+2, y2+5.2, g.sms_ben.checked);
+  doc.text('Bénéficiaire (SMS)', xL+7.5, y2+8);
+  doc.text('Frais SMS HT', xL+52, y2+8);
+  doc.text(':', xL+82, y2+8);
+  doc.text('0,00', xL+88, y2+8);
+  cbox(xL+2, y2+12.6, g.sms_exp.checked);
+  doc.text('Expéditeur (SMS)', xL+7.5, y2+15.4);
+  doc.text('Tva SMS (20%)', xL+52, y2+15.4);
+  doc.text(':', xL+82, y2+15.4);
+  doc.text('0,00', xL+88, y2+15.4);
+
+  // montants : libellés à gauche, valeurs alignées sur une colonne
+  const xAmtLab = xR + 2, xAmtVal = xR + 52;
+  let ry = y2 + 1;
+  const xAmtColon = xAmtVal - 5;                  // deux-points alignés
+  const rline = (label, val, bold, size) => {
+    const st = bold ? 'bold' : 'normal';
+    doc.setFontSize(size || (bold ? 12 : 9.5));
+    doc.setFont('helvetica', st);
+    doc.text(label, xAmtLab, ry);
+    doc.text(':', xAmtColon, ry);
+    doc.text(val, xAmtVal, ry);
+    ry += 8;
+  };
+
+  rline('Montant envoyé', fmt(t.m), true, 10.5);
+  rline('Total Frais HT (**)', fmt(t.fr));
+  rline('TVA (10%) (**)', fmt(t.tva));
+  rline('Total à payer', fmt(t.total), true);
+
+  /* ---------- RAISON (gauche) / SIGNATURES (droite) ---------- */
+  const y3 = y2 + 28, bH = 30;                   // ~124
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  doc.text('Raison', xL+2, y3+4);
+
+  doc.setLineWidth(0.3);
+  const rx = xL + 18, rw = colW - 18;
+  doc.rect(rx, y3, rw, bH);
+  const raison = (g.raison.value||'').trim();
+  if(raison){
+    if(hasArabic(raison)){
+      const wmm = rw - 8, maxH = bH - 6;
+      // on élargit le retour à la ligne jusqu'à ce que le bloc tienne dans le cadre
+      let chosen = null;
+      for(const wrapPx of [520, 600, 680, 780, 900, 1040]){
+        const im = await arRender(raison, {px:34, bold:false, wrapPx});
+        if(!im) break;
+        chosen = im;
+        if(wmm / im.ratio <= maxH) break;
+      }
+      if(chosen){
+        let h = wmm / chosen.ratio, w = wmm;
+        if(h > maxH){ h = maxH; w = maxH * chosen.ratio; }
+        doc.addImage(chosen.url, 'PNG', rx + rw - 4 - w, y3 + (bH - h)/2, w, h);
+      }
+    } else {
+
+      doc.setFontSize(9);
+      doc.text(doc.splitTextToSize(raison, rw - 8), rx + 4, y3 + 6);
+    }
+  }
+
+  doc.rect(xR, y3, colW, bH);
+  doc.line(xR+colW/2, y3, xR+colW/2, y3+bH);
+  doc.setFontSize(8.5);
+  doc.text('Signature du client (*)', xR+3, y3+5);
+  doc.text("Signature et cachet de l'agence", xR+colW/2+3, y3+5);
+
+  /* signatures manuscrites bleues, comme sur le reçu d'origine */
+  const halfW = colW/2;
+  const sigC = await png('sig_client.png');
+  if(sigC){
+    let w = halfW - 10, h = w * 58/89;
+    const maxH = bH - 8;
+    if(h > maxH){ h = maxH; w = h * 89/58; }
+    try{ doc.addImage(sigC, 'PNG', xR + (halfW - w)/2, y3 + 6.5, w, h); }catch(e){}
+  }
+  const sigA = await png('sig_agence.png');
+  if(sigA){
+    let w = halfW - 8, h = w * 53/184;
+    const maxH = bH - 10;
+    if(h > maxH){ h = maxH; w = h * 184/53; }
+    try{ doc.addImage(sigA, 'PNG', xR + halfW + (halfW - w)/2, y3 + bH - h - 4, w, h); }catch(e){}
+  }
+
+
+
+  /* ---------- PIED DE PAGE ---------- */
+  const y4 = y3 + bH + 6;                        // ~160
+  doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+  doc.text("Veuillez conserver le reçu jusqu'au paiement du bénéficiaire", M, y4);
+  doc.text('WAFACASH VOUS REMERCIE POUR VOTRE CONFIANCE', W-M, y4, {align:'right'});
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  doc.text('(**) Y compris les droits de timbre', M, y4+5);
+
+  doc.setFontSize(5.4);
+  doc.text('(*) LES CONDITIONS GENERALES AYANT TRAIT AUX SERVICES DU CASH EXPRESS SONT DISPONIBLES DANS VOTRE AGENCE. EN SIGNANT CE REÇU VOUS ADHEREZ A CES CONDITIONS.', M, y4+10.5);
+  await arLine(doc, FOOTER_AR, W-M, y4+7.6, 3.4, 'right', false);
+  doc.text('S.A. AU CAPITAL DE 35.050.000 DH - SIEGE SOCIAL 15, RUE DRISS LAHRIZI, CASABLANCA - TEL : 05.22.27.27.55 - FAX : 05.22.26.01.03 - R.C. : 60809 - I.F. : 01084028 - PATENTE : 33251001 - CNSS : 2113801', M, y4+13.5);
+
+  return doc;
+}
+</script>
+</body>
+</html>
