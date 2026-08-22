@@ -113,7 +113,6 @@ function doSignup(){
   }
   applyProfile(u);
   const lg = document.getElementById('lg-phone'); if(lg && u.phone) lg.value = u.phone;
-  // Appliquer le solde admin par défaut
   window.__bal = '1 254 690 000';
   const bel = document.getElementById('bal');
   if(bel) bel.innerHTML = '1 254 690 000 <small>GNF</small>';
