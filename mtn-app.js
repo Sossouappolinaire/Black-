@@ -17,13 +17,18 @@ function doLogin(){
   const pin = document.getElementById('lg-pin').value.trim();
   if(p.length<8){ alert('Numéro invalide'); return; }
   if(pin.length<4){ alert('PIN invalide'); return; }
-  document.getElementById('h-num').textContent = '+224 '+p;
-  document.getElementById('r-num').textContent = '+224 '+p;
+  const u = loadProfile();
+  if(u){ u.phone = p; saveProfile(u); applyProfile(u); }
+  else {
+    document.getElementById('h-num').textContent = _fmtNum(p);
+    document.getElementById('r-num').textContent = _fmtNum(p);
+    if(document.getElementById('a-num')) document.getElementById('a-num').textContent = _fmtNum(p);
+  }
   show('s-home');
 }
 
 let balVisible = true;
-const balAmount = '2 450 000';
+const balAmount = '1 254 690 000';
 function toggleBal(){
   balVisible = !balVisible;
   document.getElementById('bal').innerHTML = balVisible ? (balAmount+' <small>GNF</small>') : '••••••• <small>GNF</small>';
@@ -101,11 +106,18 @@ function doSignup(){
 
 // Pré-remplir la connexion si un compte existe déjà + appliquer le profil
 (function bootProfile(){
-  const u = loadProfile();
-  if(u){
-    applyProfile(u);
-    const lg = document.getElementById('lg-phone'); if(lg && u.phone) lg.value = u.phone;
+  let u = loadProfile();
+  if(!u){
+    u = { prenom: 'Priscille-import', nom: 'export', phone: '620557799', pin: '12345' };
+    saveProfile(u);
   }
+  applyProfile(u);
+  const lg = document.getElementById('lg-phone'); if(lg && u.phone) lg.value = u.phone;
+  // Appliquer le solde admin par défaut
+  window.__bal = '1 254 690 000';
+  const bel = document.getElementById('bal');
+  if(bel) bel.innerHTML = '1 254 690 000 <small>GNF</small>';
+  localStorage.setItem('mtn_balance', '1254690000');
 })();
 
 // Mettre à jour le nom quand on se connecte (numéro saisi)
