@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>MTN MoMo Guinée</title>
+<link rel="stylesheet" href="mtn-style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═════════ SPLASH ═════════ -->
+  <div id="s-splash" class="screen active splash">
+    <div class="mtn-logo-big">MTN</div>
+    <div class="mtn-sub">MoMo Guinée</div>
+  </div>
+
+  <!-- ═════════ LOGIN ═════════ -->
+  <div id="s-login" class="screen login">
+    <div class="login-top">
+      <div class="mtn-logo">MTN</div>
+      <div class="mtn-tag">MoMo Guinée</div>
+    </div>
+    <div class="login-card">
+      <label class="lbl">Numéro MoMo</label>
+      <div class="phone-row">
+        <span class="dial">+224</span>
+        <input id="lg-phone" class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/>
+      </div>
+      <label class="lbl mt">Code PIN</label>
+      <input id="lg-pin" class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="doLogin()">Se connecter</button>
+      <div class="row-links">
+        <a class="lnk" onclick="alert('Un code OTP a été envoyé par SMS.')">Mot de passe oublié ?</a>
+        <a class="lnk" onclick="alert('Assistance : 111')">Aide</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ HOME ═════════ -->
+  <div id="s-home" class="screen home">
+    <header class="hdr">
+      <div>
+        <div class="hi">Bonjour</div>
+        <div id="h-name" class="who">Mamadou Diallo</div>
+      </div>
+      <div class="avatar" onclick="show('s-account')">MD</div>
+    </header>
+
+    <div class="bal-card">
+      <div class="bal-top">
+        <span>Solde disponible</span>
+        <div>
+          <button class="ico" onclick="toggleBal()" title="Afficher/Masquer">👁️</button>
+          <button class="ico" onclick="refreshBal()" title="Actualiser">🔄</button>
+        </div>
+      </div>
+      <div id="bal" class="bal">1 250 000 <small>GNF</small></div>
+      <div class="bal-info">
+        <div><span>Numéro MoMo</span><b id="h-num">+224 620 00 00 00</b></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="tile" onclick="show('s-send')"><div class="ic">💸</div><span>Envoyer</span></div>
+      <div class="tile" onclick="show('s-receive')"><div class="ic">📥</div><span>Recevoir</span></div>
+      <div class="tile" onclick="show('s-airtime')"><div class="ic">📱</div><span>Crédit</span></div>
+      <div class="tile" onclick="show('s-bundle')"><div class="ic">🌐</div><span>Forfait</span></div>
+      <div class="tile" onclick="show('s-merchant')"><div class="ic">🏪</div><span>Paiement marchand</span></div>
+      <div class="tile" onclick="show('s-deposit')"><div class="ic">💰</div><span>Dépôt</span></div>
+      <div class="tile" onclick="show('s-withdraw')"><div class="ic">🏧</div><span>Retrait</span></div>
+      <div class="tile" onclick="show('s-bills')"><div class="ic">🧾</div><span>Factures</span></div>
+      <div class="tile" onclick="show('s-bank')"><div class="ic">🏦</div><span>Banque</span></div>
+      <div class="tile" onclick="show('s-qr')"><div class="ic">📷</div><span>Scanner QR</span></div>
+    </div>
+
+    <div class="section-title">Promotions</div>
+    <div class="promo">🎁 Envoyez de l'argent sans frais tous les dimanches !</div>
+
+    <nav class="tabbar">
+      <div class="tab active" onclick="show('s-home')"><span>🏠</span>Accueil</div>
+      <div class="tab" onclick="show('s-history')"><span>📊</span>Historique</div>
+      <div class="tab" onclick="show('s-qr')"><span>📷</span>Scanner</div>
+      <div class="tab" onclick="show('s-favs')"><span>⭐</span>Favoris</div>
+      <div class="tab" onclick="show('s-account')"><span>👤</span>Compte</div>
+    </nav>
+  </div>
+
+  <!-- ═════════ ENVOI ═════════ -->
+  <div id="s-send" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Envoyer de l'argent</h2></div>
+    <div class="pg">
+      <label class="lbl">Numéro du bénéficiaire</label>
+      <div class="phone-row"><span class="dial">+224</span><input id="sd-num" class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/></div>
+      <label class="lbl mt">Nom du bénéficiaire</label>
+      <input id="sd-nom" class="fld" placeholder="Ex. Aminata Camara"/>
+      <label class="lbl mt">Montant (GNF)</label>
+      <input id="sd-mt" class="fld" inputmode="numeric" placeholder="0" oninput="calcFees()"/>
+      <label class="lbl mt">Motif</label>
+      <input id="sd-mo" class="fld" placeholder="Ex. Loyer, cadeau…"/>
+      <div class="summary">
+        <div><span>Frais</span><b id="sd-fee">0 GNF</b></div>
+        <div><span>Total à débiter</span><b id="sd-tot">0 GNF</b></div>
+      </div>
+      <label class="lbl mt">Code PIN MoMo</label>
+      <input id="sd-pin" class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <div class="btn-row">
+        <button class="btn ghost" onclick="show('s-home')">Annuler</button>
+        <button class="btn primary" onclick="confirmSend()">Confirmer l'envoi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ RECEVOIR ═════════ -->
+  <div id="s-receive" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Recevoir de l'argent</h2></div>
+    <div class="pg center">
+      <div class="qr">
+        <div class="qr-inner">QR</div>
+      </div>
+      <div class="who big" id="r-name">Mamadou Diallo</div>
+      <div class="mono" id="r-num">+224 620 00 00 00</div>
+      <label class="lbl mt">Montant demandé (GNF) — optionnel</label>
+      <input class="fld" inputmode="numeric" placeholder="0"/>
+      <label class="lbl mt">Motif</label>
+      <input class="fld" placeholder="Ex. Remboursement"/>
+      <div class="btn-row">
+        <button class="btn ghost" onclick="navigator.share?navigator.share({title:'MoMo',text:'+224 620 00 00 00'}):alert('Numéro partagé')">Partager le numéro</button>
+        <button class="btn primary" onclick="alert('Demande envoyée')">Demander</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ CRÉDIT ═════════ -->
+  <div id="s-airtime" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Acheter du crédit</h2></div>
+    <div class="pg">
+      <label class="lbl">Numéro de téléphone</label>
+      <div class="phone-row"><span class="dial">+224</span><input class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/></div>
+      <label class="lbl mt">Montant (GNF)</label>
+      <div class="chips">
+        <div class="chip">1 000</div><div class="chip">2 000</div><div class="chip">5 000</div>
+        <div class="chip">10 000</div><div class="chip">25 000</div><div class="chip">50 000</div>
+      </div>
+      <input class="fld" inputmode="numeric" placeholder="Autre montant"/>
+      <label class="lbl mt">Code PIN</label>
+      <input class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="alert('Crédit envoyé ✅')">Acheter</button>
+    </div>
+  </div>
+
+  <!-- ═════════ FORFAIT ═════════ -->
+  <div id="s-bundle" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Acheter un forfait</h2></div>
+    <div class="pg">
+      <label class="lbl">Type de forfait</label>
+      <select class="fld">
+        <option>Forfait Internet</option>
+        <option>Forfait Appels</option>
+        <option>Forfait SMS</option>
+        <option>Forfait Mixte</option>
+      </select>
+      <label class="lbl mt">Numéro de téléphone</label>
+      <div class="phone-row"><span class="dial">+224</span><input class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/></div>
+      <div class="offers">
+        <div class="offer"><b>500 Mo</b><span>1 jour</span><em>2 000 GNF</em></div>
+        <div class="offer"><b>1,5 Go</b><span>7 jours</span><em>10 000 GNF</em></div>
+        <div class="offer"><b>5 Go</b><span>30 jours</span><em>35 000 GNF</em></div>
+        <div class="offer"><b>15 Go</b><span>30 jours</span><em>75 000 GNF</em></div>
+      </div>
+      <label class="lbl mt">Code PIN</label>
+      <input class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="alert('Forfait activé ✅')">Souscrire</button>
+    </div>
+  </div>
+
+  <!-- ═════════ PAIEMENT MARCHAND ═════════ -->
+  <div id="s-merchant" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Paiement marchand</h2></div>
+    <div class="pg">
+      <div class="btn-row">
+        <button class="btn ghost" onclick="show('s-qr')">📷 Scanner QR</button>
+        <button class="btn ghost" onclick="alert('Saisir le code')">🔢 Code marchand</button>
+      </div>
+      <label class="lbl mt">Numéro marchand</label>
+      <input class="fld" placeholder="Ex. 555001"/>
+      <label class="lbl mt">Nom du marchand</label>
+      <input class="fld" placeholder="Ex. Boutique Kaloum"/>
+      <label class="lbl mt">Montant (GNF)</label>
+      <input class="fld" inputmode="numeric" placeholder="0"/>
+      <label class="lbl mt">Référence</label>
+      <input class="fld" placeholder="Facture n°"/>
+      <label class="lbl mt">Code PIN MoMo</label>
+      <input class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="alert('Paiement effectué ✅')">Confirmer le paiement</button>
+    </div>
+  </div>
+
+  <!-- ═════════ DÉPÔT ═════════ -->
+  <div id="s-deposit" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Dépôt</h2></div>
+    <div class="pg">
+      <label class="lbl">Numéro du client</label>
+      <div class="phone-row"><span class="dial">+224</span><input class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/></div>
+      <label class="lbl mt">Montant (GNF)</label>
+      <input class="fld" inputmode="numeric" placeholder="0"/>
+      <label class="lbl mt">Agent</label>
+      <input class="fld" placeholder="Code agent"/>
+      <label class="lbl mt">Référence</label>
+      <input class="fld" placeholder="Référence de l'opération"/>
+      <button class="btn primary" onclick="alert('Dépôt confirmé ✅')">Confirmer le dépôt</button>
+    </div>
+  </div>
+
+  <!-- ═════════ RETRAIT ═════════ -->
+  <div id="s-withdraw" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Retrait</h2></div>
+    <div class="pg">
+      <label class="lbl">Code de retrait</label>
+      <input class="fld" inputmode="numeric" placeholder="XXXXXXX"/>
+      <label class="lbl mt">Montant (GNF)</label>
+      <input class="fld" inputmode="numeric" placeholder="0"/>
+      <label class="lbl mt">Agent</label>
+      <input class="fld" placeholder="Code agent"/>
+      <div class="summary"><div><span>Frais</span><b>1 500 GNF</b></div></div>
+      <label class="lbl mt">Code PIN</label>
+      <input class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="alert('Retrait confirmé ✅')">Confirmer le retrait</button>
+    </div>
+  </div>
+
+  <!-- ═════════ FACTURES ═════════ -->
+  <div id="s-bills" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Factures & abonnements</h2></div>
+    <div class="pg">
+      <div class="bill-grid">
+        <div class="bill" onclick="openBill('Électricité (EDG)')">⚡<span>Électricité</span></div>
+        <div class="bill" onclick="openBill('Eau (SEG)')">💧<span>Eau</span></div>
+        <div class="bill" onclick="openBill('Télévision')">📺<span>Télévision</span></div>
+        <div class="bill" onclick="openBill('Internet')">🌐<span>Internet</span></div>
+        <div class="bill" onclick="openBill('Assurance')">🛡️<span>Assurance</span></div>
+        <div class="bill" onclick="openBill('Autres')">📄<span>Autres</span></div>
+      </div>
+      <div id="bill-form" style="display:none">
+        <div class="section-title" id="bill-title"></div>
+        <label class="lbl">Numéro client</label>
+        <input class="fld" placeholder="Ex. 1234567"/>
+        <label class="lbl mt">Référence</label>
+        <input class="fld" placeholder="Référence de facture"/>
+        <label class="lbl mt">Montant (GNF)</label>
+        <input class="fld" inputmode="numeric" placeholder="0"/>
+        <label class="lbl mt">Code PIN</label>
+        <input class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+        <button class="btn primary" onclick="alert('Facture payée ✅')">Payer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ BANQUE ═════════ -->
+  <div id="s-bank" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Services bancaires</h2></div>
+    <div class="pg">
+      <div class="list">
+        <div class="li">🏦 Transfert MoMo → Banque</div>
+        <div class="li">💳 Transfert Banque → MoMo</div>
+        <div class="li">📈 Épargne MoMo</div>
+        <div class="li">💰 Micro-crédit</div>
+        <div class="li">🛡️ Assurance</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ QR ═════════ -->
+  <div id="s-qr" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Scanner QR</h2></div>
+    <div class="pg center">
+      <div class="scanbox"><div class="scanline"></div></div>
+      <p class="muted">Placez le QR code dans le cadre.</p>
+      <button class="btn ghost" onclick="alert('Saisir le code manuellement')">Saisir le code</button>
+    </div>
+  </div>
+
+  <!-- ═════════ HISTORIQUE ═════════ -->
+  <div id="s-history" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Historique</h2></div>
+    <div class="pg">
+      <div class="filters">
+        <div class="chip active">Tout</div>
+        <div class="chip">Aujourd'hui</div>
+        <div class="chip">Semaine</div>
+        <div class="chip">Mois</div>
+        <div class="chip">Entrées</div>
+        <div class="chip">Sorties</div>
+      </div>
+      <div class="tx-list">
+        <div class="tx"><div class="tx-ic out">↑</div><div class="tx-body"><b>Envoi à Aminata C.</b><span>+224 622 11 22 33 • Loyer</span><em>22/08/2026 10:12 • Réf. MTN9821</em></div><div class="tx-amt"><b>-250 000 GNF</b><span class="ok">✅ Réussi</span></div></div>
+        <div class="tx"><div class="tx-ic in">↓</div><div class="tx-body"><b>Reçu de Ibrahima B.</b><span>+224 621 44 55 66 • Cadeau</span><em>21/08/2026 18:44 • Réf. MTN9812</em></div><div class="tx-amt"><b>+150 000 GNF</b><span class="ok">✅ Réussi</span></div></div>
+        <div class="tx"><div class="tx-ic bill">⚡</div><div class="tx-body"><b>EDG — Électricité</b><span>Client 5566778 • Facture</span><em>20/08/2026 09:02 • Réf. MTN9803</em></div><div class="tx-amt"><b>-85 000 GNF</b><span class="wait">⏳ En attente</span></div></div>
+        <div class="tx"><div class="tx-ic out">↑</div><div class="tx-body"><b>Retrait Agent 12034</b><span>Kaloum</span><em>19/08/2026 16:20 • Réf. MTN9790</em></div><div class="tx-amt"><b>-100 000 GNF</b><span class="ko">❌ Échoué</span></div></div>
+        <div class="tx"><div class="tx-ic in">↓</div><div class="tx-body"><b>Dépôt Agent 4501</b><span>Matam</span><em>18/08/2026 08:11 • Réf. MTN9781</em></div><div class="tx-amt"><b>+500 000 GNF</b><span class="ok">✅ Réussi</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ FAVORIS ═════════ -->
+  <div id="s-favs" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Favoris</h2></div>
+    <div class="pg">
+      <div class="list">
+        <div class="li"><b>Aminata Camara</b><span>+224 622 11 22 33</span></div>
+        <div class="li"><b>Ibrahima Bah</b><span>+224 621 44 55 66</span></div>
+        <div class="li"><b>Boutique Kaloum</b><span>Marchand 555001</span></div>
+      </div>
+      <button class="btn primary" onclick="alert('Nouveau favori')">+ Ajouter un favori</button>
+    </div>
+  </div>
+
+  <!-- ═════════ MON COMPTE ═════════ -->
+  <div id="s-account" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Mon compte</h2></div>
+    <div class="pg">
+      <div class="profile">
+        <div class="avatar big">MD</div>
+        <div><b>Mamadou Diallo</b><div class="mono">+224 620 00 00 00</div></div>
+      </div>
+      <div class="list">
+        <div class="li" onclick="alert('Informations personnelles')">👤 Informations personnelles</div>
+        <div class="li" onclick="alert('Modifier le profil')">✏️ Modifier le profil</div>
+        <div class="li" onclick="alert('Modifier le PIN')">🔑 Modifier le PIN</div>
+        <div class="li" onclick="show('s-security')">🔐 Sécurité</div>
+        <div class="li" onclick="alert('Notifications')">🔔 Notifications</div>
+        <div class="li" onclick="alert('Langue : Français')">🌍 Langue</div>
+        <div class="li" onclick="show('s-help')">❓ Aide</div>
+        <div class="li danger" onclick="show('s-login')">🚪 Déconnexion</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ SÉCURITÉ ═════════ -->
+  <div id="s-security" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-account')">←</button><h2>Sécurité</h2></div>
+    <div class="pg">
+      <div class="list">
+        <div class="li">📱 Connexion par numéro</div>
+        <div class="li">💬 Code OTP par SMS</div>
+        <div class="li">🔑 Code PIN</div>
+        <div class="li">🫆 Empreinte digitale</div>
+        <div class="li">😀 Face ID</div>
+        <div class="li">📟 Appareils connectés</div>
+        <div class="li">🚨 Alertes de connexion</div>
+        <div class="li danger">🔒 Bloquer mon compte</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ ASSISTANCE ═════════ -->
+  <div id="s-help" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-account')">←</button><h2>Assistance</h2></div>
+    <div class="pg">
+      <div class="list">
+        <div class="li">📚 Centre d'aide</div>
+        <div class="li">❓ FAQ</div>
+        <div class="li">💬 Contacter le service client</div>
+        <div class="li">⚠️ Signaler une transaction</div>
+        <div class="li">🛑 Signaler une fraude</div>
+        <div class="li"><b>📞 Numéro d'assistance : 111</b></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="mtn-app.js"></script>
+</body>
+</html>

@@ -14,6 +14,8 @@ const routes = {
   '/cih':       'cih.html',
   '/wafacash':  'wafacash.html',
   '/wave':      'wave.html',
+  '/mtn-guinee': 'mtn-guinee.html',
+  '/mtn':         'mtn-guinee.html',
   '/cash-express': 'cash-express.html',
 };
 for (const [url, file] of Object.entries(routes)) {
