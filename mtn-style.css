@@ -124,3 +124,53 @@ select.fld{-webkit-appearance:none;appearance:none}
 
 .profile{display:flex;gap:14px;align-items:center;padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:16px}
 .profile b{display:block;font-size:17px;color:var(--dark)}
+
+/* ══ Accueil refondu (maquette officielle) ══ */
+.home{background:var(--bg);padding-bottom:96px}
+.hdr2{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px;background:var(--yellow)}
+.hicon{background:transparent;border:none;font-size:22px;cursor:pointer;position:relative;color:var(--dark)}
+.hicon .dot{position:absolute;top:0;right:-2px;width:8px;height:8px;background:var(--ko);border-radius:50%}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-mtn{border:2.5px solid #000;border-radius:999px;padding:3px 12px;font-weight:900;font-size:15px;letter-spacing:.5px}
+.brand-momo{color:#0a5ca8;font-weight:900;font-size:19px;line-height:1;display:flex;flex-direction:column}
+.brand-momo small{font-size:11px;font-weight:700}
+.hdr-name{background:var(--yellow);display:flex;align-items:center;gap:8px;padding:0 18px 22px}
+.hdr-name .hi{font-size:13px;opacity:.75}
+.hdr-name b{font-size:17px;font-weight:800;flex:1}
+.avatar.sm{width:34px;height:34px;font-size:13px}
+.bal-card{background:#111;border-radius:20px;margin:-14px 16px 14px;padding:18px 20px}
+.bal{font-size:34px}
+.bal-sub{font-size:13px;opacity:.7;margin-top:-6px;margin-bottom:10px}
+.bal-info{align-items:flex-end;border-top:none;padding-top:4px}
+.bal-info b{color:var(--yellow);font-size:15px}
+.btn-recharge{background:var(--yellow);color:#111;border:none;border-radius:999px;padding:11px 22px;font-weight:800;font-size:14px;cursor:pointer}
+.grid-card{background:#fff;border-radius:18px;margin:0 16px;padding:16px 8px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.grid{grid-template-columns:repeat(4,1fr);gap:6px;padding:0}
+.tile{background:transparent;box-shadow:none;padding:6px 2px;font-size:10.5px;line-height:1.25}
+.tile .ic{width:46px;height:46px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.c-yellow{background:#FFF3C4}.c-green{background:#DFF5E3}.c-blue{background:#DCEBFA}
+.c-pink{background:#FBE0E5}.c-purple{background:#E8E2FA}.c-orange{background:#FDE7D3}
+.promo-card{display:flex;align-items:center;background:#FFE98A;border-radius:18px;margin:14px 16px;padding:16px;overflow:hidden}
+.promo-txt{flex:1}
+.promo-txt h3{font-size:16px;font-weight:900;line-height:1.2}
+.promo-txt p{font-size:12.5px;margin:6px 0 10px}
+.promo-btn{background:#111;color:#fff;border:none;border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:700;cursor:pointer}
+.promo-phone{width:86px;height:120px;border-radius:14px;background:var(--yellow);border:4px solid #111;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;color:#0a5ca8;font-size:13px}
+.promo-phone span{border:2px solid #000;border-radius:999px;padding:1px 8px;color:#000;font-size:10px;margin-bottom:6px}
+.promo-phone small{font-size:9px}
+.recent-card{background:#fff;border-radius:18px;margin:0 16px;padding:6px 16px 8px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.recent-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:15px;font-weight:800}
+.recent-hdr a{font-size:13px;color:var(--muted);cursor:pointer;font-weight:600}
+.rtx{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.rtx .tx-ic.shop{background:#DCEBFA;color:#0a5ca8}
+.rtx .tx-amt b.pos{color:var(--ok)}
+.rtx .tx-amt span{color:var(--muted);font-size:11.5px}
+.tabbar{padding:6px 0 12px;box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+.tab.scan{position:relative}
+.tab.scan .fab{width:56px;height:56px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:26px;margin-top:-26px;margin-bottom:2px;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.tab.active{color:#C79A00;font-weight:800}
+
+/* ══ Admin ══ */
+.pg-hdr.admin{background:#111;color:var(--yellow)}
+.pg-hdr.admin .back,.pg-hdr.admin h2{color:var(--yellow)}
+.admin-badge{background:#111;color:var(--yellow);border-radius:12px;padding:12px 14px;font-weight:800;font-size:14px;text-align:center;margin-bottom:16px}

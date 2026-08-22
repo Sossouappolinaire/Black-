@@ -34,18 +34,54 @@
         <a class="lnk" onclick="alert('Un code OTP a été envoyé par SMS.')">Mot de passe oublié ?</a>
         <a class="lnk" onclick="alert('Assistance : 111')">Aide</a>
       </div>
+      <div class="row-links" style="justify-content:center;margin-top:8px">
+        <span style="color:#666;font-size:13px">Pas encore de compte&nbsp;?</span>
+        <a class="lnk" onclick="show('s-signup')"><b>Créer un compte</b></a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═════════ INSCRIPTION ═════════ -->
+  <div id="s-signup" class="screen login">
+    <div class="login-top">
+      <div class="mtn-logo">MTN</div>
+      <div class="mtn-tag">MoMo Guinée</div>
+    </div>
+    <div class="login-card">
+      <div class="section-title" style="margin-top:0">Créer un compte</div>
+      <label class="lbl">Prénom</label>
+      <input id="su-prenom" class="fld" placeholder="Ex. Mamadou" autocomplete="given-name"/>
+      <label class="lbl mt">Nom</label>
+      <input id="su-nom" class="fld" placeholder="Ex. Diallo" autocomplete="family-name"/>
+      <label class="lbl mt">Numéro MoMo</label>
+      <div class="phone-row">
+        <span class="dial">+224</span>
+        <input id="su-phone" class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/>
+      </div>
+      <label class="lbl mt">Créer un code PIN (5 chiffres)</label>
+      <input id="su-pin" class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <label class="lbl mt">Confirmer le code PIN</label>
+      <input id="su-pin2" class="fld" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"/>
+      <button class="btn primary" onclick="doSignup()">Créer mon compte</button>
+      <div class="row-links" style="justify-content:center">
+        <span style="color:#666;font-size:13px">Déjà inscrit&nbsp;?</span>
+        <a class="lnk" onclick="show('s-login')"><b>Se connecter</b></a>
+      </div>
     </div>
   </div>
 
   <!-- ═════════ HOME ═════════ -->
   <div id="s-home" class="screen home">
-    <header class="hdr">
-      <div>
-        <div class="hi">Bonjour</div>
-        <div id="h-name" class="who">Mamadou Diallo</div>
+    <header class="hdr2">
+      <button class="hicon" onclick="show('s-account')">☰</button>
+      <div class="brand">
+        <span class="brand-mtn">MTN</span>
+        <span class="brand-momo">MoMo<small>Guinée</small></span>
       </div>
-      <div class="avatar" onclick="show('s-account')">MD</div>
+      <button class="hicon bell" onclick="alert('Aucune nouvelle notification')">🔔<i class="dot"></i></button>
     </header>
+    <div class="hdr-name"><span class="hi">Bonjour</span> <b id="h-name">Mamadou Diallo</b><span id="h-avatar" class="avatar sm" onclick="show('s-account')">MD</span></div>
 
     <div class="bal-card">
       <div class="bal-top">
@@ -55,35 +91,65 @@
           <button class="ico" onclick="refreshBal()" title="Actualiser">🔄</button>
         </div>
       </div>
-      <div id="bal" class="bal">1 250 000 <small>GNF</small></div>
+      <div id="bal" class="bal">2 450 000 <small>GNF</small></div>
+      <div class="bal-sub">Solde principal</div>
       <div class="bal-info">
-        <div><span>Numéro MoMo</span><b id="h-num">+224 620 00 00 00</b></div>
+        <div><span>Numéro MoMo</span><b id="h-num">+224 620 12 34 56</b></div>
+        <button class="btn-recharge" onclick="show('s-deposit')">Recharger</button>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="tile" onclick="show('s-send')"><div class="ic">💸</div><span>Envoyer</span></div>
-      <div class="tile" onclick="show('s-receive')"><div class="ic">📥</div><span>Recevoir</span></div>
-      <div class="tile" onclick="show('s-airtime')"><div class="ic">📱</div><span>Crédit</span></div>
-      <div class="tile" onclick="show('s-bundle')"><div class="ic">🌐</div><span>Forfait</span></div>
-      <div class="tile" onclick="show('s-merchant')"><div class="ic">🏪</div><span>Paiement marchand</span></div>
-      <div class="tile" onclick="show('s-deposit')"><div class="ic">💰</div><span>Dépôt</span></div>
-      <div class="tile" onclick="show('s-withdraw')"><div class="ic">🏧</div><span>Retrait</span></div>
-      <div class="tile" onclick="show('s-bills')"><div class="ic">🧾</div><span>Factures</span></div>
-      <div class="tile" onclick="show('s-bank')"><div class="ic">🏦</div><span>Banque</span></div>
-      <div class="tile" onclick="show('s-qr')"><div class="ic">📷</div><span>Scanner QR</span></div>
+    <div class="grid-card">
+      <div class="grid">
+        <div class="tile" onclick="show('s-send')"><div class="ic c-yellow">✈️</div><span>Envoyer<br/>de l'argent</span></div>
+        <div class="tile" onclick="show('s-receive')"><div class="ic c-green">⬇️</div><span>Recevoir<br/>de l'argent</span></div>
+        <div class="tile" onclick="show('s-airtime')"><div class="ic c-blue">📱</div><span>Achat de crédit<br/>/ Forfait</span></div>
+        <div class="tile" onclick="show('s-merchant')"><div class="ic c-pink">🏪</div><span>Paiement<br/>marchand</span></div>
+        <div class="tile" onclick="show('s-withdraw')"><div class="ic c-green">🏧</div><span>Retrait<br/>Dépôt</span></div>
+        <div class="tile" onclick="show('s-bank')"><div class="ic c-purple">🏦</div><span>Services<br/>bancaires</span></div>
+        <div class="tile" onclick="show('s-bills')"><div class="ic c-orange">🧾</div><span>Factures<br/>&amp; Abonnements</span></div>
+        <div class="tile" onclick="show('s-more')"><div class="ic c-blue">▪️▪️</div><span>Plus de<br/>services</span></div>
+      </div>
     </div>
 
-    <div class="section-title">Promotions</div>
-    <div class="promo">🎁 Envoyez de l'argent sans frais tous les dimanches !</div>
+    <div class="promo-card">
+      <div class="promo-txt">
+        <h3>Transférez de l'argent<br/>partout en Guinée</h3>
+        <p>Simple, rapide et sécurisé<br/><b>avec MTN MoMo.</b></p>
+        <button class="promo-btn" onclick="alert('MTN MoMo Guinée — transferts partout en Guinée.')">En savoir plus</button>
+      </div>
+      <div class="promo-phone"><span>MTN</span><b>MoMo</b><small>Guinée</small></div>
+    </div>
+
+    <div class="recent-card">
+      <div class="recent-hdr"><b>Transactions récentes</b><a onclick="show('s-history')">Voir tout ›</a></div>
+      <div class="rtx"><div class="tx-ic in">⬇️</div><div class="tx-body"><b>Réception d'argent</b><span>De : +224 622 98 76 54</span></div><div class="tx-amt"><b class="pos">+ 500 000 GNF</b><span>Aujourd'hui, 09:35</span></div></div>
+      <div class="rtx"><div class="tx-ic out">↗</div><div class="tx-body"><b>Envoi d'argent</b><span>Vers : +224 620 11 22 33</span></div><div class="tx-amt"><b>- 150 000 GNF</b><span>Aujourd'hui, 08:15</span></div></div>
+      <div class="rtx"><div class="tx-ic bill">📱</div><div class="tx-body"><b>Achat de crédit</b><span>MTN 10 000 GNF</span></div><div class="tx-amt"><b>- 10 000 GNF</b><span>Hier, 18:42</span></div></div>
+      <div class="rtx"><div class="tx-ic shop">🏪</div><div class="tx-body"><b>Paiement marchand</b><span>Boutique Super Marché</span></div><div class="tx-amt"><b>- 75 000 GNF</b><span>Hier, 16:20</span></div></div>
+    </div>
 
     <nav class="tabbar">
       <div class="tab active" onclick="show('s-home')"><span>🏠</span>Accueil</div>
-      <div class="tab" onclick="show('s-history')"><span>📊</span>Historique</div>
-      <div class="tab" onclick="show('s-qr')"><span>📷</span>Scanner</div>
-      <div class="tab" onclick="show('s-favs')"><span>⭐</span>Favoris</div>
-      <div class="tab" onclick="show('s-account')"><span>👤</span>Compte</div>
+      <div class="tab" onclick="show('s-history')"><span>🕘</span>Historique</div>
+      <div class="tab scan" onclick="show('s-qr')"><div class="fab">▦</div>Scanner</div>
+      <div class="tab" onclick="show('s-favs')"><span>☆</span>Favoris</div>
+      <div class="tab" onclick="show('s-account')"><span>👤</span>Mon Compte</div>
     </nav>
+  </div>
+
+  <!-- ═════════ PLUS DE SERVICES ═════════ -->
+  <div id="s-more" class="screen page">
+    <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Plus de services</h2></div>
+    <div class="pg">
+      <div class="list">
+        <div class="li" onclick="show('s-qr')">📷 Scanner un QR code</div>
+        <div class="li" onclick="show('s-favs')">⭐ Favoris</div>
+        <div class="li" onclick="show('s-history')">📊 Historique</div>
+        <div class="li" onclick="show('s-security')">🔐 Sécurité</div>
+        <div class="li" onclick="show('s-help')">❓ Assistance</div>
+      </div>
+    </div>
   </div>
 
   <!-- ═════════ ENVOI ═════════ -->
@@ -320,8 +386,8 @@
     <div class="pg-hdr"><button class="back" onclick="show('s-home')">←</button><h2>Mon compte</h2></div>
     <div class="pg">
       <div class="profile">
-        <div class="avatar big">MD</div>
-        <div><b>Mamadou Diallo</b><div class="mono">+224 620 00 00 00</div></div>
+        <div id="a-avatar" class="avatar big">MD</div>
+        <div><b id="a-name">Mamadou Diallo</b><div class="mono" id="a-num">+224 620 00 00 00</div></div>
       </div>
       <div class="list">
         <div class="li" onclick="alert('Informations personnelles')">👤 Informations personnelles</div>
@@ -364,6 +430,42 @@
         <div class="li">⚠️ Signaler une transaction</div>
         <div class="li">🛑 Signaler une fraude</div>
         <div class="li"><b>📞 Numéro d'assistance : 111</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ ADMINISTRATEUR ═════════ -->
+  <div id="s-admin" class="screen page">
+    <div class="pg-hdr admin"><button class="back" onclick="show('s-login')">←</button><h2>Espace Administrateur</h2></div>
+    <div class="pg">
+      <div class="admin-badge">👑 Super Administrateur — accès total</div>
+      <div class="summary">
+        <div><span>Numéro admin</span><b id="ad-num">+224 628 00 00 00</b></div>
+        <div><span>Statut</span><b>Actif • Illimité</b></div>
+      </div>
+
+      <div class="section-title" style="padding-left:0">Gestion du solde</div>
+      <label class="lbl">Nouveau solde principal (GNF)</label>
+      <input id="ad-bal" class="fld" inputmode="numeric" placeholder="Ex. 100000000"/>
+      <button class="btn primary" onclick="adminSetBalance()">Appliquer le solde</button>
+
+      <div class="section-title" style="padding-left:0">Créditer un compte client</div>
+      <div class="phone-row"><span class="dial">+224</span><input id="ad-cli" class="fld" inputmode="numeric" maxlength="9" placeholder="6XX XX XX XX"/></div>
+      <label class="lbl mt">Montant (GNF)</label>
+      <input id="ad-mt" class="fld" inputmode="numeric" placeholder="0"/>
+      <button class="btn primary" onclick="adminCredit()">Créditer le compte</button>
+
+      <div class="section-title" style="padding-left:0">Outils administrateur</div>
+      <div class="list">
+        <div class="li" onclick="adminTool('Validation des transactions en attente')">✅ Valider les transactions</div>
+        <div class="li" onclick="adminTool('Annulation / remboursement effectué')">↩️ Annuler / rembourser</div>
+        <div class="li" onclick="adminTool('Liste des utilisateurs')">👥 Gérer les utilisateurs</div>
+        <div class="li" onclick="adminTool('Compte débloqué')">🔓 Débloquer un compte</div>
+        <div class="li" onclick="adminTool('Code PIN réinitialisé')">🔑 Réinitialiser un PIN</div>
+        <div class="li" onclick="adminTool('Plafonds et frais mis à jour')">⚙️ Plafonds & frais</div>
+        <div class="li" onclick="adminTool('Journal des opérations')">🧾 Journal / audit</div>
+        <div class="li" onclick="show('s-home')">📱 Ouvrir l'application client</div>
+        <div class="li danger" onclick="show('s-login')">🚪 Quitter le mode admin</div>
       </div>
     </div>
   </div>
